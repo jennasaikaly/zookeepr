@@ -1,11 +1,11 @@
 const express = require('express');
-const { animals } = require('./data/animals');
-const PORT = process.env.PORT || 3001;
+const { animals } = require('./data/animals'); 
+const PORT = process.env.PORT || 3001; //accessing heroku port
 const app = express();
 
 
 
-
+//FUNCTION TO FILTER RESULTS BY MULTIPLE TRAITS
 function filterByQuery(query, animalsArray) {
     let personalityTraitsArray = [];
     // Note that we save the animalsArray as filteredResults here:
@@ -44,7 +44,13 @@ function filterByQuery(query, animalsArray) {
     // return the filtered results:
     return filteredResults;
   }
+//FUNCTION TO FIND A SPECIFIC ANIMAL
+  function findById(id, animalsArray) {
+    const result = animalsArray.filter(animal => animal.id === id)[0];
+    return result;
+  }
 
+  //ROUTES
 app.get('/api/animals', (req, res) => {
     let results = animals;
     if (req.query) {
@@ -52,7 +58,17 @@ app.get('/api/animals', (req, res) => {
     }
     res.json(results);
   });
+  //param route must come after the other GET route
+  app.get('/api/animals/:id', (req, res) => {
+    const result = findById(req.params.id, animals);
+    if (result) {
+      res.json(result);
+    } else {
+      res.send(404);
+    }
+  });
 
+  //links to PORT code at top of doc (Heroku's port)
   app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
   });
