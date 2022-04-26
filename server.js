@@ -3,7 +3,10 @@ const { animals } = require('./data/animals');
 const PORT = process.env.PORT || 3001; //accessing heroku port
 const app = express();
 
-
+// parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+// parse incoming JSON data
+app.use(express.json());
 
 //FUNCTION TO FILTER RESULTS BY MULTIPLE TRAITS
 function filterByQuery(query, animalsArray) {
@@ -67,6 +70,12 @@ app.get('/api/animals', (req, res) => {
       res.send(404);
     }
   });
+// POST ROUTES
+app.post('/api/animals', (req, res) => {
+  // req.body is where our incoming content will be
+  console.log(req.body);
+  res.json(req.body);
+});
 
   //links to PORT code at top of doc (Heroku's port)
   app.listen(PORT, () => {
